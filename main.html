@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DnD Character Creator</title>
+    <link href="styles.css" rel="stylesheet">
+    <script src="scripts/DatabaseAPI.js"></script>
+    <script src="scripts/Attributes.js"></script>
+</head>
+<header>
+    <h1>D&D 5Th Edition Character Creator</h1>
+</header>
+<body>
+    <form>
+        <select id="race-select" onchange="update_race()">
+        </select>
+        <select id="class-select" onchange="update_class()">
+        </select>
+        <select id="background-select" onchange="">
+        </select>
+        <select id="level-select">
+        </select>
+        <script>
+            for(let i = 1; i <= 20; i++){
+                let opt = document.createElement("option")
+                opt.value = i-1
+                opt.innerHTML = "Level " + i
+                document.getElementById("level-select").appendChild(opt)
+            }
+        </script>
+    </form>
+    <div id="hit-box">
+        
+    </div>
+    <div>
+        <p id="p_value"></p>
+    </div>
+    <label for="attribute-table">Attributes</label>
+    <table id="attribute-table">
+        <thead>
+            <tr>
+                <td>Attribute</td>
+                <td>Value</td>
+                <td>Bonus</td>
+                <td>Reroll</td>
+            </tr>
+        </thead>
+    </table>
+    <label for="skill-table">Skills</label>
+    <table id="skill-table">
+        <thead>
+            <tr>
+                <td>Skill</td>
+                <td>Bonus</td>
+                <td>Proficient</td>
+            </tr>
+        </thead>
+        <tbody id="skill-body">
+            <tr id="acrobatic-row">
+                <td class="skill-label">Acrobatics</td>
+                <td id="acrobatic-value" class="dex-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('acrobatic-value', this)"></td>
+            </tr>
+            <tr id="animal-row">
+                <td class="skill-label">Animal Handling</td>
+                <td id="animal-value" class="wis-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('animal-value', this)"></td>
+            </tr>
+            <tr id="arcana-row">
+                <td class="skill-label">Arcana</td>
+                <td id="arcana-value" class="int-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('arcana-value', this)"></td>
+            </tr>
+            <tr id="athletics-row">
+                <td class="skill-label">Athletics</td>
+                <td id="athletics-value" class="str-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('athletics-value', this)"></td>
+            </tr>
+            <tr id="deception-row">
+                <td class="skill-label">Deception</td>
+                <td id="deception-value" class="cha-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('deception-value', this)"></td>
+            </tr>
+            <tr id="history-row">
+                <td class="skill-label">History</td>
+                <td id="history-value" class="int-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('history-value', this)"></td>
+            </tr>
+            <tr id="insight-row">
+                <td class="skill-label">Insight</td>
+                <td id="insight-value" class="wis-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('insight-value', this)"></td>
+            </tr>
+            <tr id="intimidation-row">
+                <td class="skill-label">Intimidation</td>
+                <td id="intimidate-value" class="cha-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('intimidate-value', this)"></td>
+            </tr>
+            <tr id="investigation-row">
+                <td class="skill-label">Investigation</td>
+                <td id="investigate-value" class="int-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('investigation-value', this)"></td>
+            </tr>
+            <tr id="medicine-row">
+                <td class="skill-label">Medicine</td>
+                <td id="med-value" class="wis-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('medicine-value', this)"></td>
+            </tr>
+            <tr id="nature-row">
+                <td class="skill-label">Nature</td>
+                <td id="nature-value" class="int-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('nature-value', this)"></td>
+            </tr>
+            <tr id="perception-row">
+                <td class="skill-label">Perception</td>
+                <td id="perception-value" class="wis-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('perception-value', this)"></td>
+            </tr>
+            <tr id="performance-row">
+                <td class="skill-label">Performance</td>
+                <td id="performace-value" class="cha-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('performance-value', this)"></td>
+            </tr>
+            <tr id="persuasion-row">
+                <td class="skill-label">Persuasion</td>
+                <td id="persuasion-value" class="cha-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('persuasion-value', this)"></td>
+            </tr>
+            <tr id="religion-row">
+                <td class="skill-label">Religion</td>
+                <td id="religion-value" class="int-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('religion-value', this)"></td>
+            </tr>
+            <tr id="hand-row">
+                <td class="skill-label">Sleight of Hand</td>
+                <td id="hand-value" class="dex-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('hand-value', this)"></td>
+            </tr>
+            <tr id="stealth-row">
+                <td class="skill-label">Stealth</td>
+                <td id="stealth-value"class="dex-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('stealth-value', this)"></td>
+            </tr>
+            <tr id="survival-row">
+                <td class="skill-label">Survival</td>
+                <td id="survival-value" class="wis-skill" data-modifier=0>0</td>
+                <td class="skill-box"><input type="checkbox" onclick="update_proficiency('survival-value', this)"></td>
+            </tr>
+        </tbody>
+    </table>
+    <label for="saves-table">Saving Throws</label>
+    <table id = "saves-table">
+        <thead>
+            <tr>
+                <td>Attribute</td>
+                <td>Bonus</td>
+                <td>Proficient</td>
+            </tr>
+        </thead>
+    </table>
+    <table id="spell-ability-table">
+        <thead>
+            <tr>
+                <td id="spell-attr"></td>
+                <td id="spell-save-dc"></td>
+                <td id="spell-mod"></td>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <label for="spell-table">Spells</label>
+    <table id="spell-table">
+        <thead>
+            <tr id="spell-stats">
+                <td id="spell-ability"></td>
+                <td id="spell-save"></td>
+                <td id="spell-bonus"></td>
+            </tr>
+            <tr>
+                <td>Level</td>
+                <td>Spells</td>
+            </tr>
+        </thead>
+    </table>
+
+    <label for="trait-box">Traits</label>
+    <div id="trait-box">
+        <ul id="trait-list">
+
+        </ul>
+    </div>
+    <label for="equipment-box">Equipment</label>
+    <div id="equipment-box">
+        <ul id="equipment-list">
+
+        </ul>
+    </div>
+    <div id="class specifics">
+
+    </div>
+</body>
+<script>
+    init_data()
+    init_attribute_tables()
+</script>
+</html>
